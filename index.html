@@ -54,14 +54,14 @@
     
     <script>
         var xmlhttp = new XMLHttpRequest();
-        var url = "https://nightingale001.000webhostapp.com/wp-json/wp/v2/posts";
+        var url = "http://localhost:2368/ghost/api/v3/content/posts/?key=4f8d900e8fea52e2a09bf7f582";
 
         var posts = null;
 
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 posts = JSON.parse(this.responseText);
-                populatePage(posts);
+                populatePage(posts["posts"]);
             }
         };
         xmlhttp.open("GET", url, true);
@@ -71,7 +71,7 @@
         function populatePage(posts) {
             var section = document.getElementById("blog");
             for (var i = 0; i < posts.length; i++) {
-                var article = `<article id="${posts[i].slug}" class="blog-section"><div class="container"><div class="row"><div class="col-lg-12"><h1>${posts[i].title.rendered}</h1><p>${posts[i].excerpt.rendered.replace(posts[i].link, "#"+posts[i].slug)}</p></div></div>${posts[i].content.rendered}</div></article>`
+                var article = `<article id="${posts[i].slug}" class="blog-section"><div class="container"><div class="row"><div class="col-lg-12"><h1>${posts[i].title}</h1><p>${posts[i].custom_excerpt}</p></div></div>${posts[i].html}</div></article>`
                 section.innerHTML = section.innerHTML += article;
                 var articleElement = document.getElementById(posts[i].slug);
                 if (i%2 !== 0) {
