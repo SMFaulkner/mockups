@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Headless POC</title>
+    <meta name="description" content="Headless Wordpress proof of concept">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/sticky-menu.css" rel="stylesheet">
+</head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle menu</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand page-scroll" href="#page-top">Welcome</a>
+            </div>
+
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a class="page-scroll" href="#blog">Blog</a>
+                    </li>
+                </ul>
+            </div>	
+        </div>		
+    </nav>
+    <section id="welcome" class="welcome-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Test Site</h1>
+                    <p>Tagline...   </p>
+                    <a class="btn btn-primary page-scroll" href="#blog">Click To Scroll Down!</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="blog">
+    </section>
+    
+    <a id="back2Top" title="Back to top" href="#">&#10148;</a>
+    
+    <footer>
+        <p>@Copyright</p>
+    </footer>
+    
+    <script>
+        var xmlhttp = new XMLHttpRequest();
+        var url = "https://nightingale001.000webhostapp.com/wp-json/wp/v2/posts";
+
+        var posts = null;
+
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                posts = JSON.parse(this.responseText);
+                populatePage(posts);
+            }
+        };
+        xmlhttp.open("GET", url, true);
+        xmlhttp.setRequestHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
+        xmlhttp.send();
+
+        function populatePage(posts) {
+            var section = document.getElementById("blog");
+            for (var i = 0; i < posts.length; i++) {
+                var article = `<article id="${posts[i].slug}" class="blog-section"><div class="container"><div class="row"><div class="col-lg-12"><h1>${posts[i].title.rendered}</h1><p>${posts[i].excerpt.rendered.replace(posts[i].link, "#"+posts[i].slug)}</p></div></div>${posts[i].content.rendered}</div></article>`
+                section.innerHTML = section.innerHTML += article;
+                var articleElement = document.getElementById(posts[i].slug);
+                if (i%2 !== 0) {
+                    articleElement.style.backgroundColor = "#fff";
+                } else {
+                    articleElement.style.backgroundColor = "#EFDECD";
+                }
+            }
+        };
+    </script>
+	
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Scrolling Nav JavaScript -->
+    <script src="js/jquery.easing.min.js"></script>
+    <script src="js/sticky-menu.js"></script>
+
+</body>
+</html>
